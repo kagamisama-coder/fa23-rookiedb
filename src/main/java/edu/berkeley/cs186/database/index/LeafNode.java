@@ -377,7 +377,26 @@ class LeafNode extends BPlusNode {
         // use the constructor that reuses an existing page instead of fetching a
         // brand new one.
 
-        return null;
+
+        Page page = bufferManager.fetchPage(treeContext, pageNum); // 把pageNum指向的磁盘page加载进来
+        Buffer buf = page.getBuffer();// 创造一个缓冲区对象以便方便的访问数据
+
+        byte noteType = buf.get();
+        assert (noteType == (byte) 1);
+
+        long rightSiblingNum = buf.getLong();
+        Optional<Long> sibling = Optional.of(rightSiblingNum);
+        if(rightSiblingNum == -1) sibling = Optional.empty();
+
+        int pairNum = buf.getInt();
+        List<DataBox> keys = new ArrayList<>();
+        List<RecordId> rids = new ArrayList<>();
+        for (int i = 0; i < pairNum; ++i) {
+            keys.add(DataBox.fromBytes(buf, metadata.getKeySchema()));
+            rids.add(RecordId.fromBytes(buf));
+        }
+
+        return new LeafNode(metadata, bufferManager, page, keys, rids, sibling, treeContext);
     }
 
     // Builtins ////////////////////////////////////////////////////////////////
