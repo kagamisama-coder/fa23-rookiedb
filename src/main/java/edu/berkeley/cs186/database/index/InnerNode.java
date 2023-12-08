@@ -91,8 +91,8 @@ class InnerNode extends BPlusNode {
     public LeafNode getLeftmostLeaf() {
         assert(children.size() > 0);
         // TODO(proj2): implement
-
-        return null;
+        BPlusNode child = getChild(0); // 找到当前的第一个左孩子 不断向下递归
+        return child.getLeftmostLeaf();
     }
 
     // See BPlusNode.put.

@@ -155,8 +155,8 @@ class LeafNode extends BPlusNode {
     @Override
     public LeafNode getLeftmostLeaf() {
         // TODO(proj2): implement
-
-        return null;
+        // 根据BPlusNode.getLeftmostLeaf的说法，直接返回自身就可以了。在自身这个子树中最左端的叶子节点就是自己
+        return this;
     }
 
     // See BPlusNode.put.
