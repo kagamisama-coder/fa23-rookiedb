@@ -116,8 +116,9 @@ class InnerNode extends BPlusNode {
     @Override
     public void remove(DataBox key) {
         // TODO(proj2): implement
-
-        return;
+        int index = numLessThanEqual(key, keys);
+        BPlusNode child = getChild(index);
+        child.remove(key);
     }
 
     // Helpers /////////////////////////////////////////////////////////////////
@@ -338,7 +339,7 @@ class InnerNode extends BPlusNode {
     }
 
     /**
-     * Loads an inner node from page `pageNum`.
+     * Loads an inner node from page `pageNum`. 从磁盘中读出字节流，根据字节流构造inner节点
      */
     public static InnerNode fromBytes(BPlusTreeMetadata metadata,
                                       BufferManager bufferManager, LockContext treeContext, long pageNum) {
